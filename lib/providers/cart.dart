@@ -26,6 +26,14 @@ class Cart with ChangeNotifier {
     return _items.length;
   }
 
+  double get totalAmount {
+    var total = 0.0;
+    _items.forEach(
+      (key, cartItem) => {total += cartItem.price * cartItem.quantity},
+    );
+    return total;
+  }
+
   void addItem(String productId, double price, String title) {
     if (_items.containsKey(productId)) {
       //change quantity
@@ -34,7 +42,7 @@ class Cart with ChangeNotifier {
         (existingCardItem) => CartItem(
             id: existingCardItem.id,
             title: existingCardItem.title,
-            quantity: existingCardItem.quantity,
+            quantity: existingCardItem.quantity + 1,
             price: existingCardItem.price),
       );
     } else {
