@@ -17,8 +17,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _imageUrlController = TextEditingController();
   final _imageUrlFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
-  var _editedProduct =
-      Product(id: null, title: '', price: 0, description: "", imageUrl: '');
+  var _editedProduct = Product(
+    id: null,
+    title: '',
+    price: 0,
+    description: "",
+    imageUrl: '',
+  );
 
   var _initValues = {
     'title': '',
@@ -43,6 +48,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       if (productId != null) {
         final _editedProduct =
             Provider.of<Products>(context, listen: false).findById(productId);
+
         _initValues = {
           'title': _editedProduct.title,
           'description': _editedProduct.description,
@@ -55,7 +61,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
 
     _isInit = false;
-
     super.didChangeDependencies();
   }
 
@@ -91,7 +96,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
 
     _form.currentState.save();
-    Provider.of<Products>(context, listen: false).addProducts(_editedProduct);
+
+    if (_editedProduct.id != null) {
+      Provider.of<Products>(context, listen: false)
+          .updateProduct(_editedProduct.id, _editedProduct);
+    } else {
+      Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+    }
+
     Navigator.of(context).pop();
   }
 
@@ -100,7 +112,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Product'),
-        actions: [IconButton(onPressed: _saveForm, icon: Icon(Icons.save))],
+        actions: [
+          IconButton(
+            onPressed: _saveForm,
+            icon: Icon(Icons.save),
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -127,7 +144,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     price: _editedProduct.price,
                     description: _editedProduct.description,
                     imageUrl: _editedProduct.imageUrl,
-                    id: null,
+                    id: _editedProduct.id,
+                    isFavorite: _editedProduct.isFavorite,
                   );
                 },
               ),
@@ -160,7 +178,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     price: double.parse(value),
                     description: _editedProduct.description,
                     imageUrl: _editedProduct.imageUrl,
-                    id: null,
+                    id: _editedProduct.id,
+                    isFavorite: _editedProduct.isFavorite,
                   );
                 },
               ),
@@ -185,7 +204,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     price: _editedProduct.price,
                     description: value,
                     imageUrl: _editedProduct.imageUrl,
-                    id: null,
+                    id: _editedProduct.id,
+                    isFavorite: _editedProduct.isFavorite,
                   );
                 },
               ),
@@ -195,9 +215,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   Container(
                     width: 100,
                     height: 100,
-                    margin: EdgeInsets.only(top: 8, right: 10),
+                    margin: EdgeInsets.only(
+                      top: 8,
+                      right: 10,
+                    ),
                     decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Colors.grey),
+                      border: Border.all(
+                        width: 1,
+                        color: Colors.grey,
+                      ),
                     ),
                     child: _imageUrlController.text.isEmpty
                         ? Text('Enter a URL')
@@ -215,9 +241,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       textInputAction: TextInputAction.done,
                       controller: _imageUrlController,
                       focusNode: _imageUrlFocusNode,
-                      onEditingComplete: () {
-                        setState(() {});
-                      },
+                      // onEditingComplete: () {
+                      //   setState(() {});
+                      // },
                       onFieldSubmitted: (_) => _saveForm(),
                       validator: (value) {
                         if (value.isEmpty) {
@@ -240,7 +266,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           price: _editedProduct.price,
                           description: _editedProduct.description,
                           imageUrl: value,
-                          id: null,
+                          id: _editedProduct.id,
+                          isFavorite: _editedProduct.isFavorite,
                         );
                       },
                     ),
