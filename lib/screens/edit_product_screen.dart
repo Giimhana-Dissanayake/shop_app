@@ -94,6 +94,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         textInputAction: TextInputAction.done,
                         controller: _imageUrlController,
                         focusNode: _imageUrlFocusNode,
+                        onEditingComplete: () {
+                          setState(() {});
+                        },
                       ),
                     )
                   ],
