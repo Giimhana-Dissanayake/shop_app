@@ -113,7 +113,7 @@ class Products with ChangeNotifier {
             'description': product.description,
             'imageUrl': product.imageUrl,
             'price': product.price,
-            'isFavourite': product.isFavorite,
+            'isFavorite': product.isFavorite,
           },
         ),
       );
