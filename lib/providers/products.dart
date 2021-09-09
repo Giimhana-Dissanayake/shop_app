@@ -97,7 +97,9 @@ class Products with ChangeNotifier {
 
         notifyListeners();
       },
-    );
+    ).catchError((error) {
+      throw error;
+    });
   }
 
   void updateProduct(String id, Product newProduct) {
