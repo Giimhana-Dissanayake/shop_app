@@ -42,6 +42,10 @@ class Products with ChangeNotifier {
 
   // var _showFavouritesOnly = false;
 
+  final String authToken;
+
+  Products(this.authToken, this._items);
+
   List<Product> get items {
     // if (_showFavouritesOnly) {
     //   return _items.where((productItem) => productItem.isFavorite).toList();
@@ -69,7 +73,8 @@ class Products with ChangeNotifier {
   // }
 
   Future<void> fetchAndSetProducts() async {
-    const url = "https://coffee-application-70b98.firebaseio.com/products.json";
+    final url =
+        "https://coffee-application-70b98.firebaseio.com/products.json?auth=$authToken";
 
     try {
       final response = await http.get(url);

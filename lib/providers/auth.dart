@@ -39,6 +39,8 @@ class Auth with ChangeNotifier {
         throw HttpException(responseData['error']['message']);
       }
 
+      print(responseData['expiresIn']);
+
       _token = responseData['idToken'];
       _userId = responseData['localId'];
       _expiryDate = DateTime.now().add(
