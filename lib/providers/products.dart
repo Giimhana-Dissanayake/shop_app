@@ -43,8 +43,9 @@ class Products with ChangeNotifier {
   // var _showFavouritesOnly = false;
 
   final String authToken;
+  final String userId;
 
-  Products(this.authToken, this._items);
+  Products(this.authToken, this.userId, this._items);
 
   List<Product> get items {
     // if (_showFavouritesOnly) {
@@ -73,7 +74,7 @@ class Products with ChangeNotifier {
   // }
 
   Future<void> fetchAndSetProducts() async {
-    final url =
+    var url =
         "https://coffee-application-70b98.firebaseio.com/products.json?auth=$authToken";
 
     try {
@@ -85,6 +86,12 @@ class Products with ChangeNotifier {
         return;
       }
 
+      url =
+          "https://coffee-application-70b98.firebaseio.com/userFavorites/$userId.json?auth=$authToken";
+
+      final favoriteResponse = await http.get(url);
+      final favoriteData = json.decode(favoriteResponse.body);
+
       final List<Product> loadedProducts = [];
 
       extractedData.forEach(
@@ -95,7 +102,8 @@ class Products with ChangeNotifier {
               title: prodData['title'],
               description: prodData['description'],
               price: prodData['price'],
-              isFavorite: prodData['isFavorite'],
+              isFavorite:
+                  favoriteData == null ? false : favoriteData[prodId] ?? false,
               imageUrl: prodData['imageUrl'],
             ),
           );
@@ -123,7 +131,6 @@ class Products with ChangeNotifier {
             'description': product.description,
             'imageUrl': product.imageUrl,
             'price': product.price,
-            'isFavorite': product.isFavorite,
           },
         ),
       );
